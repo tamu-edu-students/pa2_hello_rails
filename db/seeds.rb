@@ -20,8 +20,14 @@ more_movies = [
     :release_date => '19-Feb-2021'},
   {:title => 'CODA', :rating => 'PG-13',
     :release_date => '13-Aug-2021'}
+  {:title => 'Inception', :rating => 'PG-13',
+    :release_date => '16-Jul-2010'},
+  {:title => 'The Godfather', :rating => 'R',
+    :release_date => '24-Mar-1972'},
+  {:title => 'Interstellar', :rating => 'R',
+    :release_date => '14-Oct-1994'}
 ]
 
 more_movies.each do |movie|
-  Movie.create!(movie)
+    Movie.find_or_create_by!(title: movie[:title], rating: movie[:rating], release_date: movie[:release_date])
 end
