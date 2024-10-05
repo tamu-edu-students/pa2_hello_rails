@@ -1,9 +1,11 @@
 class MoviesController < ApplicationController
   before_action :set_movie, only: %i[ show edit update destroy ]
+  before_action :set_sort_params
+  helper_method :sort_column, :sort_direction
 
   # GET /movies or /movies.json
   def index
-    @movies = Movie.all
+    @movies = Movie.order(sort_column => sort_direction)
   end
 
   # GET /movies/1 or /movies/1.json
@@ -25,7 +27,7 @@ class MoviesController < ApplicationController
 
     respond_to do |format|
       if @movie.save
-        format.html { redirect_to movie_url(@movie), notice: "Movie was successfully created." }
+        format.html { redirect_to movies_path(sort: sort_column, direction: sort_direction), notice: "Movie was successfully created." }
         format.json { render :show, status: :created, location: @movie }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +40,7 @@ class MoviesController < ApplicationController
   def update
     respond_to do |format|
       if @movie.update(movie_params)
-        format.html { redirect_to movie_url(@movie), notice: "Movie was successfully updated." }
+        format.html { redirect_to movies_path(sort: sort_column, direction: sort_direction), notice: "Movie was successfully updated." }
         format.json { render :show, status: :ok, location: @movie }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +54,32 @@ class MoviesController < ApplicationController
     @movie.destroy!
 
     respond_to do |format|
-      format.html { redirect_to movies_url, notice: "Movie was successfully destroyed." }
+      format.html { redirect_to movies_path(sort: sort_column, direction: sort_direction), notice: "Movie was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_movie
-      @movie = Movie.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_movie
+    @movie = Movie.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def movie_params
-      params.require(:movie).permit(:title, :rating, :description, :release_date)
-    end
+  # Only allow a list of trusted parameters through.
+  def movie_params
+    params.require(:movie).permit(:title, :rating, :description, :release_date)
+  end
+
+  def set_sort_params
+    session[:sort] = params[:sort] if params[:sort].present?
+    session[:direction] = params[:direction] if params[:direction].present?
+  end
+
+  def sort_column
+    %w[title rating release_date].include?(session[:sort]) ? session[:sort] : "title"
+  end
+
+  def sort_direction
+    %w[asc desc].include?(session[:direction]) ? session[:direction] : "asc"
+  end
 end
