@@ -5,6 +5,5 @@
 <div>
   <%= link_to "Edit this movie", edit_movie_path(@movie, sort: sort_column, direction: sort_direction) %> |
   <%= link_to "Back to movies", movies_path(sort: sort_column, direction: sort_direction) %>
-
   <%= button_to "Destroy this movie", @movie, method: :delete, params: { sort: sort_column, direction: sort_direction } %>
 </div>

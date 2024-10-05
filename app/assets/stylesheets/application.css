@@ -58,12 +58,16 @@ th.sorted-asc {
   input[type="submit"]:hover {
     background-color: #45a049;
   }
-  
+
   /* Button styling for actions */
   button {
+    display: inline-block;
     background-color: #008CBA;
     color: white;
     border: none;
+    text-align: center;
+    width: 150px;
+    margin-top: 5px;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
